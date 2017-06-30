@@ -1,0 +1,25 @@
+{
+  "name": "node-mysql-playground",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "md5": "^2.2.1",
+    "mysql": "^2.13.0"
+  },
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robsonklima/node-mysql-playground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robsonklima/node-mysql-playground/issues"
+  },
+  "homepage": "https://github.com/robsonklima/node-mysql-playground#readme",
+  "description": ""
+}
