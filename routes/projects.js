@@ -86,6 +86,25 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
+    router.delete("/projects/:id", function(req, res) {
+        var query = "DELETE from ?? WHERE ??=?";
+        var table = ["projects", "id", req.params.id
+        ];
+        query = mysql.format(query,table);
+        pool.getConnection(function(err, connection) {
+            connection.query(query, function(err, details) {
+                connection.release();
+                if(err) {
+                    res.status(400).send({"error": true, "details": err});
+                } else if (details.affectedRows == 0) {
+                    res.status(404).send({"error": false, details });
+                } else {
+                    res.status(200).send({"error": false, details });
+                }
+            });
+        });
+    });
+
 }
 
 module.exports = ROUTER;
