@@ -41,14 +41,12 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     });
 
     router.post("/projects", function(req, res) {
-        var query = "INSERT INTO ?? (??,??,??) VALUES (?,?,?)";
+        var query = "INSERT INTO ?? (??,??,added_date) VALUES (?,?,NOW())";
         var vars = ["projects"
           , "name"
           , "scope"
-          , "added_date"
           , req.body.name
           , req.body.scope
-          , "NOW()"
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
