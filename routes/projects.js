@@ -48,7 +48,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
           , "added_date"
           , req.body.name
           , req.body.scope
-          , req.body.added_date
+          , "NOW()"
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
