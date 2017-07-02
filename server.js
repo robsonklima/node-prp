@@ -31,6 +31,9 @@ REST.prototype.configureExpress = function(pool) {
       var projects_router = require("./routes/projects");
       var projects = new projects_router(router, pool);
 
+      var activities_router = require("./routes/activities");
+      var activities = new activities_router(router, pool);
+
       self.startServer();
 }
 
