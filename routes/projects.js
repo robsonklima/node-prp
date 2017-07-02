@@ -9,9 +9,12 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/projects", function(req, res) {
-        var query = "SELECT * FROM ?? ORDER BY ?? ASC";
-        var vars = ["projects", "name"];
-        query = mysql.format(query, vars);
+        var query = `SELECT 		p.*, count(a.id) amount_activities
+                      FROM 		projects p
+                      LEFT JOIN	activities a on p.id = a.id_project
+                      GROUP BY 	p.id
+                      ORDER BY 	p.name ASC`;
+        query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, projects) {
                 connection.release();
