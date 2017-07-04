@@ -43,8 +43,8 @@ REST.prototype.configureExpress = function(pool) {
       var risks_router = require("./routes/risks");
       var risks = new risks_router(router, pool);
 
-      var risk_identifieds_router = require("./routes/risk-identifieds");
-      var risk_identifieds = new risk_identifieds_router(router, pool);
+      var risk_identifications_router = require("./routes/risk-identifications");
+      var risk_identifications = new risk_identifications_router(router, pool);
 
       self.startServer();
 }

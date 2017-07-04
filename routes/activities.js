@@ -10,7 +10,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
 
     router.get("/activities", function(req, res) {
         var query = `SELECT a.*, p.name project_name, u.name user_name
-                      FROM activities a, projects p, users u 
+                      FROM activities a, projects p, users u
                       WHERE a.id_project = p.id and a.id_user = u.id`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
