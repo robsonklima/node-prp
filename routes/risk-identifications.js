@@ -85,8 +85,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
 
     router.delete("/risk-identifications/:id", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["risk-identifications", "id", req.params.id
-        ];
+        var table = ["risk_identifications", "id", req.params.id];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, details) {
