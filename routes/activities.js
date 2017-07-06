@@ -9,9 +9,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/activities", function(req, res) {
-        var query = `SELECT a.*, p.name project_name, u.name user_name
-                      FROM activities a, projects p, users u
-                      WHERE a.id_project = p.id and a.id_user = u.id`;
+        var query = `SELECT 	a.*, p.project_name, u.user_name
+                      FROM 	activities a, projects p, users u
+                      WHERE 	a.project_id = p.project_id and a.user_id = u.user_id`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activities) {
@@ -25,9 +25,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/activities/:id", function(req, res) {
+    router.get("/activities/:activity_id", function(req, res) {
         var query = "SELECT * FROM ?? WHERE ??=?";
-        var vars = ["activities", "id", req.params.id];
+        var vars = ["activities", "activity_id", req.params.activity_id];
         query = mysql.format(query,vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activity) {
@@ -44,16 +44,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     router.post("/activities", function(req, res) {
         var query = "INSERT INTO ?? (??,??,??,??,??,added_date) VALUES (?,?,?,?,?,NOW())";
         var vars = ["activities"
-          , "title"
-          , "details"
-          , "amount_hours"
-          , "id_project"
-          , "id_user"
-          , req.body.title
-          , req.body.details
-          , req.body.amount_hours
-          , req.body.id_project
-          , req.body.id_user
+          , "activity_title"
+          , "activity_details"
+          , "activity_amount_hours"
+          , "project_id"
+          , "user_id"
+          , req.body.activity_title
+          , req.body.activity_details
+          , req.body.activity_amount_hours
+          , req.body.project_id
+          , req.body.user_id
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -68,18 +68,20 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.put("/activities/:id", function(req, res) {
+    router.put("/activities/:activity_id", function(req, res) {
         var query = "UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?";
         var vars = ["activities"
-          , "title", req.body.title
-          , "details", req.body.details
-          , "amount_hours", req.body.amount_hours
-          , "id_project", req.body.id_project
-          , "id_user", req.body.id_user
+          , "activity_title", req.body.activity_title
+          , "activity_details", req.body.activity_details
+          , "activity_amount_hours", req.body.activity_amount_hours
+          , "project_id", req.body.project_id
+          , "user_id", req.body.user_id
 
-          , "id", req.params.id
+          , "activity_id", req.params.activity_id
         ];
         query = mysql.format(query, vars);
+
+        console.log(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, details) {
                 connection.release();
@@ -94,9 +96,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/activities/:id", function(req, res) {
+    router.delete("/activities/:activity_id", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["activities", "id", req.params.id
+        var table = ["activities", "activity_id", req.params.activity_id
         ];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {

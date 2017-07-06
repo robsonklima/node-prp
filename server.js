@@ -49,6 +49,9 @@ REST.prototype.configureExpress = function(pool) {
       var risk_problems_router = require("./routes/risk-problems");
       var risk_problems = new risk_problems_router(router, pool);
 
+      var risk_reviews_router = require("./routes/risk-reviews");
+      var risk_reviews = new risk_reviews_router(router, pool);
+
       self.startServer();
 }
 

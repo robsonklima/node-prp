@@ -9,11 +9,11 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/risks", function(req, res) {
-        var query = `SELECT 	r.*, rt.name risk_type_name, rc.name risk_category_name
+        var query = `SELECT 	r.*, rt.risk_type_name , rc.risk_category_name
                       FROM 	risks r, risk_types rt, risk_categories rc
                       WHERE	(1=1)
-                      AND		r.id_risk_type = rt.id
-                      AND		r.id_risk_category = rc.id`;
+                      AND		r.risk_type_id = rt.risk_type_id
+                      AND		r.risk_category_id = rc.risk_category_id`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, risks) {
@@ -27,9 +27,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/risks/:id", function(req, res) {
+    router.get("/risks/:risk_id", function(req, res) {
         var query = "SELECT * FROM ?? WHERE ??=?";
-        var vars = ["risks", "id", req.params.id];
+        var vars = ["risks", "risk_id", req.params.risk_id];
         query = mysql.format(query,vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, risk) {
@@ -44,18 +44,18 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     });
 
     router.post("/risks", function(req, res) {
-        var query = "INSERT INTO ?? (??,??,??,??,??,added_date) VALUES (?,?,?,?,?,NOW())";
+        var query = "INSERT INTO ?? (??,??,??,??,??,risk_added_date) VALUES (?,?,?,?,?,NOW())";
         var vars = ["risks"
-          , "title"
-          , "cause"
-          , "effect"
-          , "id_risk_type"
-          , "id_risk_category"
-          , req.body.title
-          , req.body.cause
-          , req.body.effect
-          , req.body.id_risk_type
-          , req.body.id_risk_category
+          , "risk_title"
+          , "risk_cause"
+          , "risk_effect"
+          , "risk_type_id"
+          , "risk_category_id"
+          , req.body.risk_title
+          , req.body.risk_cause
+          , req.body.risk_effect
+          , req.body.risk_type_id
+          , req.body.risk_category_id
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -70,16 +70,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.put("/risks/:id", function(req, res) {
+    router.put("/risks/:risk_id", function(req, res) {
         var query = "UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?";
         var vars = ["risks"
-          , "title", req.body.title
-          , "cause", req.body.cause
-          , "effect", req.body.effect
-          , "id_risk_type", req.body.id_risk_type
-          , "id_risk_category", req.body.id_risk_category
+          , "risk_title", req.body.risk_title
+          , "risk_cause", req.body.risk_cause
+          , "risk_effect", req.body.risk_effect
+          , "risk_type_id", req.body.risk_type_id
+          , "risk_category_id", req.body.risk_category_id
 
-          , "id", req.params.id
+          , "risk_id", req.params.risk_id
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -96,9 +96,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/risks/:id", function(req, res) {
+    router.delete("/risks/:risk_id", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["risks", "id", req.params.id
+        var table = ["risks", "risk_id", req.params.risk_id
         ];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {

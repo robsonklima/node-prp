@@ -8,19 +8,19 @@ function ROUTER(router, pool) {
 ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
-    router.get("/risk-identifications/projects/:id_user/:id_risk", function(req, res) {
-        var query = `SELECT 			p.id
-                      				    , p.name
-                      				    , (SELECT  id
-                            					FROM   risk_identifications ri
-                            					WHERE  ri.id_project = p.id
-                            					AND    ri.id_risk = ?
-                                      LIMIT  1) risk_identification_id
+    router.get("/risk-identifications/projects/:user_id/:risk_id", function(req, res) {
+        var query = `SELECT 			p.project_id
+                      				    , p.project_name
+                      				    , (SELECT  risk_identification_id
+                          						FROM   risk_identifications ri
+                          						WHERE  ri.project_id = p.project_id
+                          						AND    ri.risk_id = ?
+                      			          LIMIT  1) risk_identification_id
                       FROM 			  projects p
-                      INNER JOIN	activities a ON p.id = a.id_project
-                      WHERE			  a.id_user = ?
-                      GROUP BY 		p.id`;
-        var vars = [req.params.id_risk, req.params.id_user];
+                      INNER JOIN	activities a ON p.project_id = a.project_id
+                      WHERE			  a.user_id = ?
+                      GROUP BY 		p.project_id`;
+        var vars = [req.params.risk_id, req.params.user_id];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, projects) {
@@ -34,19 +34,19 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/risk-identifications/activities/:id_user/:id_risk", function(req, res) {
-        var query = `SELECT 			a.id
-                      				    , a.title
-                      				    , (SELECT  id
-                      					      FROM   risk_identifications ri
-                      					      WHERE  ri.id_activity = a.id
-                      					      AND    ri.id_risk = ?
-                                      LIMIT  1) risk_identification_id
+    router.get("/risk-identifications/activities/:user_id/:risk_id", function(req, res) {
+        var query = `SELECT 			a.activity_id
+                      				    , a.activity_title
+                      				    , (SELECT  risk_identification_id
+                          					  FROM   risk_identifications ri
+                          					  WHERE  ri.activity_id = a.activity_id
+                          					  AND    ri.risk_id = ?
+                      			          LIMIT  1) risk_identification_id
                       FROM 			  projects p
-                      INNER JOIN	activities a ON p.id = a.id_project
-                      WHERE			  a.id_user = ?
-                      GROUP BY 		a.id`;
-        var vars = [req.params.id_risk, req.params.id_user];
+                      INNER JOIN	activities a ON p.project_id = a.project_id
+                      WHERE			  a.user_id = ?
+                      GROUP BY 		a.activity_id`;
+        var vars = [req.params.risk_id, req.params.user_id];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activities) {
@@ -61,16 +61,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     });
 
     router.post("/risk-identifications", function(req, res) {
-        var query = "INSERT INTO ?? (??,??,??,??,added_date) VALUES (?,?,?,?,NOW())";
+        var query = "INSERT INTO ?? (??,??,??,??,risk_identification_added_date) VALUES (?,?,?,?,NOW())";
         var vars = ["risk_identifications"
-          , "id_risk"
-          , "id_project"
-          , "id_activity"
-          , "id_user"
-          , req.body.id_risk
-          , req.body.id_project
-          , req.body.id_activity
-          , req.body.id_user
+          , "risk_id"
+          , "project_id"
+          , "activity_id"
+          , "user_id"
+          , req.body.risk_id
+          , req.body.project_id
+          , req.body.activity_id
+          , req.body.user_id
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -85,9 +85,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/risk-identifications/:id", function(req, res) {
+    router.delete("/risk-identifications/:risk_identification_id", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["risk_identifications", "id", req.params.id];
+        var table = ["risk_identifications", "risk_identification_id", req.params.risk_identification_id];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, details) {
