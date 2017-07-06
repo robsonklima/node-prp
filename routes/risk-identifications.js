@@ -8,19 +8,19 @@ function ROUTER(router, pool) {
 ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
-    router.get("/risk-identifications/projects/:user_id/:risk_id", function(req, res) {
-        var query = `SELECT 			p.project_id
-                      				    , p.project_name
+    router.get("/risk-identifications/projects/:userId/:riskId", function(req, res) {
+        var query = `SELECT 			p.project_id projectId
+                      				    , p.project_name projectName
                       				    , (SELECT  risk_identification_id
                           						FROM   risk_identifications ri
                           						WHERE  ri.project_id = p.project_id
                           						AND    ri.risk_id = ?
-                      			          LIMIT  1) risk_identification_id
+                      			          LIMIT  1) riskIdentificationId
                       FROM 			  projects p
                       INNER JOIN	activities a ON p.project_id = a.project_id
                       WHERE			  a.user_id = ?
                       GROUP BY 		p.project_id`;
-        var vars = [req.params.risk_id, req.params.user_id];
+        var vars = [req.params.userId, req.params.riskId];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, projects) {
@@ -34,19 +34,19 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/risk-identifications/activities/:user_id/:risk_id", function(req, res) {
-        var query = `SELECT 			a.activity_id
-                      				    , a.activity_title
+    router.get("/risk-identifications/activities/:userId/:riskId", function(req, res) {
+        var query = `SELECT 			a.activity_id activityId
+                      				    , a.activity_title activityTitle
                       				    , (SELECT  risk_identification_id
                           					  FROM   risk_identifications ri
                           					  WHERE  ri.activity_id = a.activity_id
                           					  AND    ri.risk_id = ?
-                      			          LIMIT  1) risk_identification_id
+                      			          LIMIT  1) riskIdentificationId
                       FROM 			  projects p
                       INNER JOIN	activities a ON p.project_id = a.project_id
                       WHERE			  a.user_id = ?
                       GROUP BY 		a.activity_id`;
-        var vars = [req.params.risk_id, req.params.user_id];
+        var vars = [req.params.userId, req.params.riskId];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activities) {
@@ -67,10 +67,10 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
           , "project_id"
           , "activity_id"
           , "user_id"
-          , req.body.risk_id
-          , req.body.project_id
-          , req.body.activity_id
-          , req.body.user_id
+          , req.body.riskId
+          , req.body.projectId
+          , req.body.activityId
+          , req.body.userId
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -85,9 +85,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/risk-identifications/:risk_identification_id", function(req, res) {
+    router.delete("/risk-identifications/:riskIdentificationId", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["risk_identifications", "risk_identification_id", req.params.risk_identification_id];
+        var table = ["risk_identifications", "risk_identification_id", req.params.riskIdentificationId];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, details) {

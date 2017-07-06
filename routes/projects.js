@@ -9,7 +9,11 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/projects", function(req, res) {
-        var query = `SELECT 		p.*, count(a.activity_id) project_amount_activities
+        var query = `SELECT 		p.project_id projectId
+                                , p.project_name projectName
+                                , p.project_scope projectScope
+                                , p.project_added_date projectAddedDate
+                                , count(a.activity_id) projectAmountActivities
                       FROM 		  projects p
                       LEFT JOIN	activities a on p.project_id = a.project_id
                       GROUP BY 	p.project_id
@@ -27,9 +31,13 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/projects/:project_id", function(req, res) {
-        var query = "SELECT * FROM ?? WHERE ??=?";
-        var vars = ["projects", "project_id", req.params.project_id];
+    router.get("/projects/:projectId", function(req, res) {
+        var query = `SELECT   project_id projectId
+                              , project_name projectName
+                              , project_scope projectScope
+                              , project_added_date projectAddedDate
+                              FROM ?? WHERE ??=?`;
+        var vars = ["projects", "project_id", req.params.projectId];
         query = mysql.format(query,vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, project) {
@@ -48,8 +56,8 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         var vars = ["projects"
           , "project_name"
           , "project_scope"
-          , req.body.project_name
-          , req.body.project_scope
+          , req.body.projectName
+          , req.body.projectScope
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -64,13 +72,13 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.put("/projects/:project_id", function(req, res) {
+    router.put("/projects/:projectId", function(req, res) {
         var query = "UPDATE ?? SET ?? = ?, ?? = ? WHERE ?? = ?";
         var vars = ["projects"
-          , "project_name", req.body.project_name
-          , "project_scope", req.body.project_scope
+          , "project_name", req.body.projectName
+          , "project_scope", req.body.projectScope
 
-          , "project_id", req.params.project_id
+          , "project_id", req.params.projectId
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -87,9 +95,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/projects/:project_id", function(req, res) {
+    router.delete("/projects/:projectId", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["projects", "project_id", req.params.project_id
+        var table = ["projects", "project_id", req.params.projectId
         ];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {

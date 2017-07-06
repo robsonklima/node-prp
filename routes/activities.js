@@ -9,8 +9,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/activities", function(req, res) {
-        var query = `SELECT 	a.*, p.project_name, u.user_name
-                      FROM 	activities a, projects p, users u
+        var query = `SELECT 	a.activity_id activityId
+                              , a.activity_title activityTitle
+                              , a.activity_details activityDetails
+                              , a.activity_amount_hours activityAmountHours
+                              , a.activity_added_date activityAddedDate
+                              , a.project_id projectId
+                              , a.user_id userId
+                              , p.project_name projectName
+                              , u.user_name userName
+                      FROM 	  activities a, projects p, users u
                       WHERE 	a.project_id = p.project_id and a.user_id = u.user_id`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
@@ -25,9 +33,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.get("/activities/:activity_id", function(req, res) {
-        var query = "SELECT * FROM ?? WHERE ??=?";
-        var vars = ["activities", "activity_id", req.params.activity_id];
+    router.get("/activities/:activityId", function(req, res) {
+        var query = `SELECT   activity_id activityId
+                              , activity_title activityTitle
+                              , activity_details activityDetails
+                              , activity_amount_hours activityAmountHours
+                              , activity_added_date activityAddedDate
+                              , project_id projectId
+                              , user_id userId
+                              FROM ?? WHERE ??=?`;
+        var vars = ["activities", "activity_id", req.params.activityId];
         query = mysql.format(query,vars);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activity) {
@@ -49,11 +64,11 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
           , "activity_amount_hours"
           , "project_id"
           , "user_id"
-          , req.body.activity_title
-          , req.body.activity_details
-          , req.body.activity_amount_hours
-          , req.body.project_id
-          , req.body.user_id
+          , req.body.activityTitle
+          , req.body.activityDetails
+          , req.body.activityAmountHours
+          , req.body.projectId
+          , req.body.userId
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
@@ -68,16 +83,16 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.put("/activities/:activity_id", function(req, res) {
+    router.put("/activities/:activityId", function(req, res) {
         var query = "UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?";
         var vars = ["activities"
-          , "activity_title", req.body.activity_title
-          , "activity_details", req.body.activity_details
-          , "activity_amount_hours", req.body.activity_amount_hours
-          , "project_id", req.body.project_id
-          , "user_id", req.body.user_id
+          , "activity_title", req.body.activityTitle
+          , "activity_details", req.body.activityDetails
+          , "activity_amount_hours", req.body.activityAmountHours
+          , "project_id", req.body.projectId
+          , "user_id", req.body.userId
 
-          , "activity_id", req.params.activity_id
+          , "activity_id", req.params.activityId
         ];
         query = mysql.format(query, vars);
 
@@ -96,9 +111,9 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
         });
     });
 
-    router.delete("/activities/:activity_id", function(req, res) {
+    router.delete("/activities/:activityId", function(req, res) {
         var query = "DELETE from ?? WHERE ??=?";
-        var table = ["activities", "activity_id", req.params.activity_id
+        var table = ["activities", "activity_id", req.params.activityId
         ];
         query = mysql.format(query,table);
         pool.getConnection(function(err, connection) {
