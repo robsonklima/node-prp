@@ -9,17 +9,18 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/activities", function(req, res) {
-        var query = `SELECT 	a.activity_id activityId
-                              , a.activity_title activityTitle
-                              , a.activity_details activityDetails
-                              , a.activity_amount_hours activityAmountHours
-                              , a.activity_added_date activityAddedDate
-                              , a.project_id projectId
-                              , a.user_id userId
-                              , p.project_name projectName
-                              , u.user_name userName
-                      FROM 	  activities a, projects p, users u
-                      WHERE 	a.project_id = p.project_id and a.user_id = u.user_id`;
+        var query = `SELECT 	  a.activity_id activityId
+                                , a.activity_title activityTitle
+                                , a.activity_details activityDetails
+                                , a.activity_amount_hours activityAmountHours
+                                , a.activity_added_date activityAddedDate
+                                , a.project_id projectId
+                                , a.user_id userId
+                                , p.project_name projectName
+                                , u.user_name userName
+                      FROM 	    activities a, projects p, users u
+                      WHERE 	  a.project_id = p.project_id and a.user_id = u.user_id
+                      ORDER BY  a.activity_title`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, activities) {

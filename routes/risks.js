@@ -9,18 +9,19 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/risks", function(req, res) {
-        var query = `SELECT  r.risk_id riskId
-                             , r.risk_title riskTitle
-                             , r.risk_cause riskCause
-                             , r.risk_effect riskEffect
-                             , r.risk_added_date riskAddedDate
-                             , r.risk_category_id riskCategoryId
-                             , rc.risk_category_name riskCategoryName
-                             , r.risk_type_id riskTypeId
-                             , rt.risk_type_name riskTypeName
-                      FROM 	 risks r, risk_types rt, risk_categories rc
-                      WHERE	 r.risk_type_id = rt.risk_type_id
-                      AND	   r.risk_category_id = rc.risk_category_id`;
+        var query = `SELECT    r.risk_id riskId
+                               , r.risk_title riskTitle
+                               , r.risk_cause riskCause
+                               , r.risk_effect riskEffect
+                               , r.risk_added_date riskAddedDate
+                               , r.risk_category_id riskCategoryId
+                               , rc.risk_category_name riskCategoryName
+                               , r.risk_type_id riskTypeId
+                               , rt.risk_type_name riskTypeName
+                      FROM 	   risks r, risk_types rt, risk_categories rc
+                      WHERE	   r.risk_type_id = rt.risk_type_id
+                      AND	     r.risk_category_id = rc.risk_category_id
+                      ORDER BY r.risk_title`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, risks) {

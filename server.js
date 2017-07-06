@@ -52,6 +52,9 @@ REST.prototype.configureExpress = function(pool) {
       var risk_reviews_router = require("./routes/risk-reviews");
       var risk_reviews = new risk_reviews_router(router, pool);
 
+      var risk_review_references_router = require("./routes/risk-review-references");
+      var risk_review_references = new risk_review_references_router(router, pool);
+
       self.startServer();
 }
 

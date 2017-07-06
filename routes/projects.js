@@ -17,7 +17,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
                       FROM 		  projects p
                       LEFT JOIN	activities a on p.project_id = a.project_id
                       GROUP BY 	p.project_id
-                      ORDER BY 	p.project_name ASC`;
+                      ORDER BY 	p.project_name`;
         query = mysql.format(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, projects) {
@@ -54,10 +54,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     router.post("/projects", function(req, res) {
         var query = "INSERT INTO ?? (??,??,project_added_date) VALUES (?,?,NOW())";
         var vars = ["projects"
-          , "project_name"
-          , "project_scope"
-          , req.body.projectName
-          , req.body.projectScope
+          , "project_name", "project_scope", req.body.projectName, req.body.projectScope
         ];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
