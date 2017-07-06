@@ -9,9 +9,8 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/risk-types", function(req, res) {
-        var query = `SELECT   risk_type_id riskTypeId
-                              , risk_type_name riskTypeName
-                      FROM    ?? ORDER BY ?? ASC`;
+        var query = `SELECT risk_type_id riskTypeId, risk_type_name riskTypeName
+                      FROM ?? ORDER BY ?? ASC`;
         var vars = ["risk_types", "risk_type_name"];
         query = mysql.format(query, vars);
         pool.getConnection(function(err, connection) {
