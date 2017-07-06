@@ -42,7 +42,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     });
 
     router.post("/activities", function(req, res) {
-        var query = "INSERT INTO ?? (??,??,??,??,??,added_date) VALUES (?,?,?,?,?,NOW())";
+        var query = "INSERT INTO ?? (??,??,??,??,??,activity_added_date) VALUES (?,?,?,?,?,NOW())";
         var vars = ["activities"
           , "activity_title"
           , "activity_details"
