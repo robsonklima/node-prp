@@ -63,8 +63,6 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
           , req.body.userId
         ];
         query = mysql.format(query, vars);
-
-        console.log(query);
         pool.getConnection(function(err, connection) {
             connection.query(query, function(err, details) {
                 connection.release();

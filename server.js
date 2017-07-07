@@ -19,49 +19,49 @@ REST.prototype.connectMysql = function() {
 }
 
 REST.prototype.configureExpress = function(pool) {
-      var self = this;
-      app.use(bodyParser.urlencoded({ extended: true }));
-      app.use(bodyParser.json());
-      var router = express.Router();
-      app.use('/api', router);
+    var self = this;
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+    var router = express.Router();
+    app.use('/api', router);
 
-      var users_router = require("./routes/users");
-      var users = new users_router(router, pool);
+    var usersRouter = require("./routes/users");
+    var users = new usersRouter(router, pool);
 
-      var projects_router = require("./routes/projects");
-      var projects = new projects_router(router, pool);
+    var projectsRouter = require("./routes/projects");
+    var projects = new projectsRouter(router, pool);
 
-      var activities_router = require("./routes/activities");
-      var activities = new activities_router(router, pool);
+    var activitiesRouter = require("./routes/activities");
+    var activities = new activitiesRouter(router, pool);
 
-      var risk_categories_router = require("./routes/risk-categories");
-      var risk_categories = new risk_categories_router(router, pool);
+    var risk_categoriesRouter = require("./routes/risk-categories");
+    var risk_categories = new risk_categoriesRouter(router, pool);
 
-      var risk_types_router = require("./routes/risk-types");
-      var risk_types = new risk_types_router(router, pool);
+    var riskTypesRouter = require("./routes/risk-types");
+    var riskTypes = new riskTypesRouter(router, pool);
 
-      var risks_router = require("./routes/risks");
-      var risks = new risks_router(router, pool);
+    var risksRouter = require("./routes/risks");
+    var risks = new risksRouter(router, pool);
 
-      var risk_identifications_router = require("./routes/risk-identifications");
-      var risk_identifications = new risk_identifications_router(router, pool);
+    var risk_identificationsRouter = require("./routes/risk-identifications");
+    var risk_identifications = new risk_identificationsRouter(router, pool);
 
-      var risk_problems_router = require("./routes/risk-problems");
-      var risk_problems = new risk_problems_router(router, pool);
+    var risk_problemsRouter = require("./routes/risk-problems");
+    var risk_problems = new risk_problemsRouter(router, pool);
 
-      var risk_reviews_router = require("./routes/risk-reviews");
-      var risk_reviews = new risk_reviews_router(router, pool);
+    var riskReviewsRouter = require("./routes/risk-reviews");
+    var riskReviews = new riskReviewsRouter(router, pool);
 
-      var risk_review_references_router = require("./routes/risk-review-references");
-      var risk_review_references = new risk_review_references_router(router, pool);
+    var riskReviewReferencesRouter = require("./routes/risk-review-references");
+    var riskReviewReferences = new riskReviewReferencesRouter(router, pool);
 
-      self.startServer();
+    self.startServer();
 }
 
 REST.prototype.startServer = function() {
-      app.listen(process.env.PORT, function(){
-          console.log("Nodejs up on port: " + process.env.PORT);
-      });
+    app.listen(process.env.PORT, function(){
+        console.log("Nodejs up on port: " + process.env.PORT);
+    });
 }
 
 REST.prototype.stop = function(err) {
