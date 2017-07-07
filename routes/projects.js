@@ -9,7 +9,7 @@ ROUTER.prototype.handleRoutes = function(router, pool) {
     var self = this;
 
     router.get("/projects", function(req, res) {
-        var query = `SELECT 		p.project_id projectId
+        var query = `SELECT 	p.project_id projectId
                                 , p.project_name projectName
                                 , p.project_scope projectScope
                                 , p.project_added_date projectAddedDate
